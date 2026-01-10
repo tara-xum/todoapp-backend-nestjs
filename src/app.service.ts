@@ -21,4 +21,10 @@ export class AppService {
     return todo;
   }
 
+  deleteOne(id: number): void {
+    const existingTodo = this.repository.findOne(id);
+    if(!existingTodo) throw new NotFoundException();
+    this.repository.deleteOne(existingTodo.id);
+  }
+
 }
