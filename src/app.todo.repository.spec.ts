@@ -1,11 +1,10 @@
 import { InMemoryTodoRepository } from './app.todo.repository';
-import { InMemoryTodos } from './data/in-memory-todos';
 
 describe('InMemoryTodoRepository', () => {
   let repository: InMemoryTodoRepository;
 
   beforeEach(() => {
-    repository = new InMemoryTodoRepository(InMemoryTodos);
+    repository = new InMemoryTodoRepository();
   });
 
   it('should be defined', () => {
