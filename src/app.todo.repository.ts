@@ -1,29 +1,22 @@
+import { Inject } from '@nestjs/common';
 import { Todo } from './interfaces';
 import { TodoRepository } from './app.interface.repository';
+import { InMemoryTodos } from './data/in-memory-todos';
 
 export class InMemoryTodoRepository implements TodoRepository {
-  private idCounter = 1;
-  private todos: Todo[] = [
-    {
-      id: 1,
-      title: 'Buy groceries',
-      description: 'buy tomatoes, lettuce, bread, eggs',
-      completed: false
-    },
-    {
-      id: 2,
-      title: 'Yearly Medical Check-up',
-      description: 'Bring results from last year',
-      completed: false
-    },
-  ];
+  private idCounter = 3;
+  private todos: InMemoryTodos = InMemoryTodos.data;
+  
+  constructor(@Inject('InMemoryTodos') todos: InMemoryTodos) {
+    this.todos = todos;    
+  }
 
   findAll(): Todo[] {
-    return this.todos;
+    return InMemoryTodos.data;
   }
 
   findOne(id: number): Todo | undefined {
-    return this.todos.find(t => t.id === id);
+    return InMemoryTodos.data.find(t => t.id === id);
   }
 
 }
