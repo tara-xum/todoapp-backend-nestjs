@@ -29,6 +29,13 @@ export class AppService {
           });
   }
 
+  update(id: number): Todo {
+    const existingTodoItem = this.repository.findOne(id);
+    if (!existingTodoItem) throw new NotFoundException();
+    const updatedTodoItem = this.repository.update(id);
+    return updatedTodoItem;
+  }
+
   deleteOne(id: number): void {
     const existingTodo = this.repository.findOne(id);
     if(!existingTodo) throw new NotFoundException();

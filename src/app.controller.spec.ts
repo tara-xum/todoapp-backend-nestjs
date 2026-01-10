@@ -15,6 +15,7 @@ describe('AppController', () => {
     findAll: jest.fn(),
     findOne: jest.fn(),
     create: jest.fn(),
+    update: jest.fn(),
     deleteOne: jest.fn(),
   };
 
@@ -31,6 +32,10 @@ describe('AppController', () => {
     controller = module.get<AppController>(AppController);
     service = module.get<AppService>(AppService);
   })
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -59,7 +64,7 @@ describe('AppController', () => {
     });
   });
 
-    describe('createOneToDoItem', () => {
+  describe('createOneToDoItem', () => {
     it('should create a todo item with given title and description', () => {
       const testTitle = "Test a"
       const testDescription = "Test a desc"
@@ -76,13 +81,36 @@ describe('AppController', () => {
     });
   });
 
+  describe('updateTodoItem', () => {
+    it('should update the todo item with given id', () => {
+      const updatedTodoItem = { id: 1, title: 'Test', description: 'test', completed: true };
+      mockAppService.update.mockReturnValue(updatedTodoItem);
+
+      const result = controller.updateTodoItem('1');
+
+      expect(result).toEqual(updatedTodoItem);
+      expect(service.update).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return null when trying to update a non-existing todo item', () => {
+      const mockTestTodoItem = { id: "1", title: "Test", description: "test", completed: false }
+      mockAppService.update.mockReturnValue(null);
+
+      const result = controller.updateTodoItem('999');
+
+      expect(result).toBeNull();
+      expect(service.update).toHaveBeenCalledTimes(1);
+      expect(service.update).toHaveBeenCalledWith(999);
+    });
+  });
+
   describe('deleteOneTodoItem', () => {
     it('should delete the todo item with given id', () => {
       const requestedId = 1;
+      mockAppService.deleteOne.mockReturnValue(undefined);
 
-      const result = controller.deleteTodoItem('1');
+      controller.deleteTodoItem('1');
 
-      expect(service.findOne).toHaveBeenCalledTimes(1);
       expect(service.deleteOne).toHaveBeenCalledTimes(1);
     });
   });

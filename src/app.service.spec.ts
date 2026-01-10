@@ -17,6 +17,7 @@ describe('AppService', () => {
       findAll: jest.fn().mockReturnValue(testTodos),
       findOne: jest.fn(),
       create: jest.fn(),
+      update: jest.fn(),
       deleteOne: jest.fn(),
     };
 
@@ -71,7 +72,7 @@ describe('AppService', () => {
   describe('createTodoItem', () => {
     it('should create a todo item given a valid body', () => {
       const testTodoItem = { title: 'Test', description: 'test' };
-      const resultingTodoItem = {id: "1", title: testTodoItem.title, description: testTodoItem.description, completed: false}
+      const resultingTodoItem = {id: 1, title: testTodoItem.title, description: testTodoItem.description, completed: false}
  
       mockRepository.create.mockReturnValue(resultingTodoItem);
       
@@ -80,6 +81,29 @@ describe('AppService', () => {
       expect(todo).toEqual(resultingTodoItem);
       expect(mockRepository.create).toHaveBeenCalledWith(testTodoItem);
     })
+  });
+
+  describe('update', () => {
+    it('should update a todo item given a valid id', () => {
+      const existingTodoItem = { id: 1, title: 'Test', description: 'test', completed: false };
+      const updatedTodoItem = { id: 1, title: 'Test', description: 'test', completed: true };
+
+      mockRepository.findOne.mockReturnValue(existingTodoItem);
+      mockRepository.update.mockReturnValue(updatedTodoItem);
+      
+      const updatedTodo = service.update(1);
+
+      expect(updatedTodo).toEqual(updatedTodoItem);
+      expect(mockRepository.findOne).toHaveBeenNthCalledWith(1, 1);
+      expect(mockRepository.update).toHaveBeenNthCalledWith(1, 1);
+    });
+
+    it('should throw NotFoundException when trying to update a non-existing todo', () => {
+      mockRepository.findOne.mockReturnValue(undefined);
+      
+      expect(() => service.update(1000)).toThrow();
+      expect(mockRepository.findOne).toHaveBeenNthCalledWith(1, 1000);
+    });
   });
 
   describe('deleteOne', () => {
