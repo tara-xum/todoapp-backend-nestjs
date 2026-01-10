@@ -61,6 +61,27 @@ describe('InMemoryTodoRepository', () => {
     });
   });
 
+  describe('update', () => {
+    it('should update the completed status of a todo item', () => {
+        const todoBeforeUpdate = repository.findOne(1);
+        const initialCompletedStatus = todoBeforeUpdate?.completed;
+
+        const updatedTodo = repository.update(1);
+        
+        expect(updatedTodo).toBeDefined();
+        expect(updatedTodo?.completed).toBe(!initialCompletedStatus);
+
+        const fetchedTodo = repository.findOne(1);
+        expect(fetchedTodo?.completed).toBe(!initialCompletedStatus);
+    });
+
+    it('should return null when trying to update a non-existing todo item', () => {
+        const updatedTodo = repository.update(999);
+        
+        expect(updatedTodo).toBeNull();
+    });
+  });
+
   describe('deleteOne', () => {
     it('should delete a todo by id', () => {
         const initialTodos = repository.findAll();
