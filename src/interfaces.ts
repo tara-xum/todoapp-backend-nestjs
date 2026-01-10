@@ -8,3 +8,8 @@ export interface Todo {
 export interface InMemoryTodos {
   data: Todo[];
 }
+
+export interface CreateToDoItem {
+  title: string;
+  description: string;
+}

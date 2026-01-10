@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CreateTodoItemDto } from './app.dto';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -13,6 +14,7 @@ describe('AppController', () => {
   const mockAppService = {
     findAll: jest.fn(),
     findOne: jest.fn(),
+    create: jest.fn(),
     deleteOne: jest.fn(),
   };
 
@@ -54,6 +56,23 @@ describe('AppController', () => {
 
       expect(result).toEqual({ id: 1, title: 'Test', description: 'test', completed: false });
       expect(service.findOne).toHaveBeenCalledTimes(1);
+    });
+  });
+
+    describe('createOneToDoItem', () => {
+    it('should create a todo item with given title and description', () => {
+      const testTitle = "Test a"
+      const testDescription = "Test a desc"
+      mockAppService.create.mockReturnValue({id: "1", title: testTitle, description: testDescription, completed: false});
+
+      const newTodoItem = controller.createOneToDoItem({title: testTitle, description: testDescription});
+      
+      expect(service.create).toHaveBeenCalledTimes(1);
+      expect(service.create).toHaveBeenCalledWith({title: testTitle, description: testDescription});
+      expect(newTodoItem).toHaveProperty("id")
+      expect(newTodoItem).toHaveProperty("title")
+      expect(newTodoItem).toHaveProperty("description")
+      expect(newTodoItem).toHaveProperty("completed")      
     });
   });
 

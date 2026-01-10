@@ -45,6 +45,22 @@ describe('InMemoryTodoRepository', () => {
     });
   });
 
+  describe('create', () => {
+    it('should create a new todo item', () => {
+        const newTodoData = { title: 'Test 1', description: 'Test description' };
+        
+        const newTodo = repository.create(newTodoData);
+        
+        expect(newTodo).toBeDefined();
+        expect(newTodo.id).toBeDefined();
+        expect(newTodo.title).toBe(newTodoData.title);
+        expect(newTodo.description).toBe(newTodoData.description);
+
+        const fetchedTodo = repository.findOne(newTodo.id);
+        expect(fetchedTodo).toEqual(newTodo);
+    });
+  });
+
   describe('deleteOne', () => {
     it('should delete a todo by id', () => {
         const initialTodos = repository.findAll();
