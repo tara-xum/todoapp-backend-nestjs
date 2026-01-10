@@ -13,6 +13,7 @@ describe('AppController', () => {
   const mockAppService = {
     findAll: jest.fn(),
     findOne: jest.fn(),
+    deleteOne: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -44,7 +45,7 @@ describe('AppController', () => {
     });
   });
 
-    describe('getOneTodoItem', () => {
+  describe('getOneTodoItem', () => {
     it('should return one todo item', () => {
       const requestedId = 1;
       mockAppService.findOne.mockReturnValue(testTodos.filter(todo => todo.id === requestedId)[0]);
@@ -53,6 +54,17 @@ describe('AppController', () => {
 
       expect(result).toEqual({ id: 1, title: 'Test', description: 'test', completed: false });
       expect(service.findOne).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('deleteOneTodoItem', () => {
+    it('should delete the todo item with given id', () => {
+      const requestedId = 1;
+
+      const result = controller.deleteTodoItem('1');
+
+      expect(service.findOne).toHaveBeenCalledTimes(1);
+      expect(service.deleteOne).toHaveBeenCalledTimes(1);
     });
   });
 

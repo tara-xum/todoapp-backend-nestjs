@@ -35,30 +35,54 @@ describe('AppService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return all todos from repository', () => {
-    mockRepository.findAll.mockReturnValue(testTodos);
-    
-    const todos = service.findAll();
-    
-    expect(todos).toEqual(testTodos);
-    expect(mockRepository.findAll).toHaveBeenCalled();
+  describe('findAll', () => {
+    it('should return all todos from repository', () => {
+      mockRepository.findAll.mockReturnValue(testTodos);
+      
+      const todos = service.findAll();
+      
+      expect(todos).toEqual(testTodos);
+      expect(mockRepository.findAll).toHaveBeenCalled();
+    });
   });
 
-  it('should return a todo by id', () => {
-    const testTodo = testTodos[0];
-    mockRepository.findOne.mockReturnValue(testTodo);
-    
-    const todo = service.findOne(1);
-    
-    expect(todo).toEqual(testTodo);
-    expect(mockRepository.findOne).toHaveBeenCalledWith(1);
+  describe('findOne', () => {
+    it('should return a todo by id', () => {
+      const testTodo = testTodos[0];
+      mockRepository.findOne.mockReturnValue(testTodo);
+      
+      const todo = service.findOne(1);
+      
+      expect(todo).toEqual(testTodo);
+      expect(mockRepository.findOne).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw NotFoundException when todo with given id is not found', () => {
+      mockRepository.findOne.mockReturnValue(undefined);
+      
+      expect(() => service.findOne(1000)).toThrow();
+      expect(mockRepository.findOne).toHaveBeenCalledWith(1000);
+    });
   });
 
-  it('should throw NotFoundException when todo with given id is not found', () => {
-    mockRepository.findOne.mockReturnValue(undefined);
-    
-    expect(() => service.findOne(1000)).toThrow();
-    expect(mockRepository.findOne).toHaveBeenCalledWith(1000);
+  describe('deleteOne', () => {
+    it('should delete a todo by id', () => {
+      const testTodo = testTodos[0];
+      mockRepository.findOne.mockReturnValue(testTodo);
+      mockRepository.deleteOne = jest.fn();
+      
+      service.deleteOne(1);
+      
+      expect(mockRepository.findOne).toHaveBeenCalledWith(1);
+      expect(mockRepository.deleteOne).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw NotFoundException when trying to delete a non-existing todo', () => {
+      mockRepository.findOne.mockReturnValue(undefined);
+      
+      expect(() => service.deleteOne(1000)).toThrow();
+      expect(mockRepository.findOne).toHaveBeenCalledWith(1000);
+    });
   });
 
 });

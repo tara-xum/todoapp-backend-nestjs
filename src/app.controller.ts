@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param
 } from '@nestjs/common';
@@ -18,6 +19,12 @@ export class AppController {
   @Get(':id')
   getOneTodoItem(@Param('id') id: string): Todo {
     return this.appService.findOne(parseInt(id));
+  }
+
+  @Delete(':id')
+  deleteTodoItem(@Param('id') id: string): string {
+    this.appService.deleteOne(parseInt(id));
+    return "Successfully deleted item";
   }
 
 }
