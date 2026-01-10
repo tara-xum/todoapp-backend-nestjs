@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppService } from './app.service';
 import { TodoRepository } from './app.interface.repository';
+import { create } from 'domain';
 
 describe('AppService', () => {
   let service: AppService;
@@ -15,6 +16,8 @@ describe('AppService', () => {
     const mockTodoRepository = {
       findAll: jest.fn().mockReturnValue(testTodos),
       findOne: jest.fn(),
+      create: jest.fn(),
+      deleteOne: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -65,11 +68,24 @@ describe('AppService', () => {
     });
   });
 
+  describe('createTodoItem', () => {
+    it('should create a todo item given a valid body', () => {
+      const testTodoItem = { title: 'Test', description: 'test' };
+      const resultingTodoItem = {id: "1", title: testTodoItem.title, description: testTodoItem.description, completed: false}
+ 
+      mockRepository.create.mockReturnValue(resultingTodoItem);
+      
+      const todo = service.create(testTodoItem);
+
+      expect(todo).toEqual(resultingTodoItem);
+      expect(mockRepository.create).toHaveBeenCalledWith(testTodoItem);
+    })
+  });
+
   describe('deleteOne', () => {
     it('should delete a todo by id', () => {
       const testTodo = testTodos[0];
       mockRepository.findOne.mockReturnValue(testTodo);
-      mockRepository.deleteOne = jest.fn();
       
       service.deleteOne(1);
       

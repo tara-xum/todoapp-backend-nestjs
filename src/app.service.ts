@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Todo } from './interfaces';
+import { Todo, CreateToDoItem } from './interfaces';
 import { TodoRepository } from './app.interface.repository';
 import { InMemoryTodoRepository } from './app.todo.repository';
 
@@ -19,6 +19,14 @@ export class AppService {
     const todo = this.repository.findOne(id);
     if (!todo) throw new NotFoundException();
     return todo;
+  }
+
+  create(toDoItem: CreateToDoItem): Todo {
+    return this.repository.create(
+          { 
+            title: toDoItem.title, 
+            description: toDoItem.description
+          });
   }
 
   deleteOne(id: number): void {
