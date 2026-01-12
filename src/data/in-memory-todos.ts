@@ -2,7 +2,7 @@ export class InMemoryTodos {
   static data = [
   {
     id: 1,
-    title: 'Buy groceries',
+    title: 'Buy veggies and groceries',
     description: 'buy tomatoes, lettuce, bread, eggs',
     completed: false
   },

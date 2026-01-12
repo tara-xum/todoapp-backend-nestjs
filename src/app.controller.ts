@@ -8,7 +8,7 @@ import {
   Put
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { CreateToDoItem, Todo } from './interfaces';
+import { Todo } from './interfaces';
 import { CreateTodoItemDto, UpdatedTodoItemDto } from './app.dto'
 
 @Controller('todos')
